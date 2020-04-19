@@ -9,8 +9,9 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './login.less';
 import logo from './image/logo.png';
 import { reqLogin } from '../../api';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import memoryUtil from '../../utils/memoryUtil';
+import storageUtil from '../../utils/storageUtil';
 
 // 包装form组件
 const NormalLoginForm = (props) => {
@@ -23,9 +24,16 @@ const NormalLoginForm = (props) => {
     const result = response.data;
     if(result.status === 1){
         message.success('登录成功');
-        // 保存当前的用户信息
-        memoryUtil.user = result.user;
-        memoryUtil.token = result.token;
+        
+        const {user, token} = result;
+        // 保存到内存当中当前的用户信息
+        memoryUtil.user = user;
+        memoryUtil.token = token;
+
+        console.log(user);
+        // 保存到本地存储
+        storageUtil.saveUser(user);
+        storageUtil.saveToken(token);
         
         // 跳转到后台管理界面
         props.history.replace('/');
@@ -96,6 +104,13 @@ const LoginForm = withRouter(NormalLoginForm);
 // 登录的路由组件
 export default class Login extends Component {
   render() {
+
+    // 如果用户已经登录，跳转到管理界面
+    const user = memoryUtil.user;
+    if(user && user._id) {
+      return <Redirect to='/'/>;
+    }
+
     return (
       <div className='login'>
         <header className='login-header'>

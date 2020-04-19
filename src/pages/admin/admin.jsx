@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-
 // 管理的路由组件
-
-import memoryUtil from '../../utils/memoryUtil';
+import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import memoryUtil from '../../utils/memoryUtil';
 
 export default class Admin extends Component {
     render () {        
@@ -18,5 +16,9 @@ export default class Admin extends Component {
         return (
         <div>hello {user.username}, your token:{token}</div>
         );
+    }
+
+    componentDidMount() {
+
     }
 }
