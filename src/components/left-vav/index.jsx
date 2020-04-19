@@ -13,6 +13,7 @@ import {
     PieChartOutlined,
     DesktopOutlined,
     ContainerOutlined,
+    HomeOutlined,
     MailOutlined,
 } from '@ant-design/icons';
 
@@ -38,7 +39,7 @@ export default class LeftNav extends Component {
                     // inlineCollapsed={this.state.collapsed}
                 >
                     <Menu.Item key="1">
-                        <PieChartOutlined />
+                        <HomeOutlined />
                         <span>首页</span>
                     </Menu.Item>
 
@@ -52,11 +53,11 @@ export default class LeftNav extends Component {
                         }
                     >
                         <Menu.Item key="5">
-                            <PieChartOutlined />
+                            <AppstoreOutlined />
                             品类管理
                         </Menu.Item>
                         <Menu.Item key="6">
-                            <PieChartOutlined />
+                            <MenuUnfoldOutlined />
                             商品管理
                         </Menu.Item>
                     </SubMenu>
