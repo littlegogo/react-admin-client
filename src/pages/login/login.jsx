@@ -2,17 +2,36 @@ import React, { Component } from 'react';
 import {
   Form,
   Input,
-  Button
+  Button,
+  message
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-
 import './login.less';
 import logo from './image/logo.png';
+import { reqLogin } from '../../api';
+import { withRouter } from 'react-router-dom';
+import memoryUtil from '../../utils/memoryUtil';
 
 // 包装form组件
-const NormalLoginForm = () => {
-  const onFinish = (values) => {
+const NormalLoginForm = (props) => {
+
+  const onFinish = async (values) => {
     console.log('Received values of form: ', values);
+    // 解构赋值
+    const { username, password } = values;
+    const response = await reqLogin(username, password);
+    const result = response.data;
+    if(result.status === 1){
+        message.success('登录成功');
+        // 保存当前的用户信息
+        memoryUtil.user = result.user;
+        memoryUtil.token = result.token;
+        
+        // 跳转到后台管理界面
+        props.history.replace('/');
+    } else {
+      message.error(result.message);
+    }
   };
 
   return (
@@ -44,8 +63,8 @@ const NormalLoginForm = () => {
             validator:(_, value) => {
               if(!value){
                 return Promise.reject('请填写密码');
-              }else if(value.length < 6){
-                return Promise.reject('密码最少6位');          
+              }else if(value.length < 5){
+                return Promise.reject('密码最少5位');          
               } else if(/^[a-zA-Z0-9_]+$/.test(value) === false){
                 return Promise.reject('密码必须是英文，数字或下划线组成');
               }
@@ -71,6 +90,9 @@ const NormalLoginForm = () => {
 
 }
 
+// 使NormalLoginForm组件可以访问路由
+const LoginForm = withRouter(NormalLoginForm);
+
 // 登录的路由组件
 export default class Login extends Component {
   render() {
@@ -82,7 +104,7 @@ export default class Login extends Component {
         </header>
         <section className='login-content'>
           <h2>用户登录</h2>
-          <NormalLoginForm/>
+          <LoginForm/>
         </section>
       </div>
     );
