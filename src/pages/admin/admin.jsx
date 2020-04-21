@@ -35,29 +35,32 @@ export default class Admin extends Component {
         const token = memoryUtil.token;
 
         return (
-            <Layout style={{height:'100%'}}>
-            <Sider>
-                <LeftNav/>
-            </Sider>
-            <Layout>
-              <Header>Header</Header>
-              <Content style={{backgroundColor:'#fff'}}>
-                  <Switch>
-                      <Route path='/home' component={Home}></Route>
-                      <Route path='/category' component={Category}></Route>
-                      <Route path='/product' component={Product}></Route>
-                      <Route path='/role' component={Role}></Route>
-                      <Route path='/user' component={User}></Route>
-                      <Route path='/chars/bar' component={Bar}></Route>
-                      <Route path='/chars/line' component={Line}></Route>
-                      <Route path='/chars/pie' component={Pie}></Route>
-                      {/* 只要不是上述路由，都转到主页 */}
-                      <Redirect to='/home'/>
-                  </Switch>
-              </Content>
-              <Footer style={{textAlign:'center', color:'#ccc'}}>推荐使用谷歌浏览器，获得最佳体验</Footer>
+            <div class='container'>
+                <Layout style={{height:'100%'}}>
+                <Sider>
+                    <LeftNav/>
+                </Sider>
+                <Layout>
+                <Header>Header</Header>
+                <Content style={{backgroundColor:'#fff'}}>
+                    <Switch>
+                        <Route path='/home' component={Home}></Route>
+                        <Route path='/category' component={Category}></Route>
+                        <Route path='/product' component={Product}></Route>
+                        <Route path='/role' component={Role}></Route>
+                        <Route path='/user' component={User}></Route>
+                        <Route path='/chars/bar' component={Bar}></Route>
+                        <Route path='/chars/line' component={Line}></Route>
+                        <Route path='/chars/pie' component={Pie}></Route>
+                        {/* 只要不是上述路由，都转到主页 */}
+                        <Redirect to='/home'/>
+                    </Switch>
+                </Content>
+                <Footer style={{textAlign:'center', color:'#ccc'}}>推荐使用谷歌浏览器，获得最佳体验</Footer>
+                </Layout>
             </Layout>
-          </Layout>
+            </div>
+
         );
     }
 
