@@ -1,6 +1,6 @@
 // 管理的路由组件
 import React, { Component } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from 'antd';
 import memoryUtil from '../../utils/memoryUtil';
 import LeftNav from '../../components/left-vav';
@@ -35,7 +35,6 @@ export default class Admin extends Component {
         const token = memoryUtil.token;
 
         return (
-            <div class='container'>
                 <Layout style={{height:'100%'}}>
                 <Sider>
                     <LeftNav/>
@@ -59,8 +58,6 @@ export default class Admin extends Component {
                 <Footer style={{textAlign:'center', color:'#ccc'}}>推荐使用谷歌浏览器，获得最佳体验</Footer>
                 </Layout>
             </Layout>
-            </div>
-
         );
     }
 
