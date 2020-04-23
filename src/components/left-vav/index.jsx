@@ -22,13 +22,13 @@ import {
 const { SubMenu } = Menu;
 
  class LeftNav extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
 
     // 根据数据生成菜单节点
    getMenuNodes_map = (menuList) => {
+
+       // 获取到当前的路由
+       const path = this.props.location.pathname;
+
        return menuList.map(item => {
            if(! item.child) {
                return(
@@ -40,6 +40,12 @@ const { SubMenu } = Menu;
                     </Menu.Item>
                );
            } else {
+
+               const citem = item.child.find(citem => citem.key === path);
+               if(citem){
+                   this.openKey = item.key;
+               }
+                 
                return(
                     <SubMenu
                         key={item.key}
@@ -94,10 +100,18 @@ const { SubMenu } = Menu;
         },[]);
     }
 
-    render() {
-        //得到当前请求的路由路径
+    // 在第一次render()之前执行一次
+    // 为第一个render准备数据（同步的）
+    componentWillMount() {
+        this.menuNodes = this.getMenuNodes_map(menuList);
+    }
 
+    render() {
+
+        //得到当前请求的路由路径
         const path = this.props.location.pathname;
+        // 得到当前需要打开菜单项的key
+        const openKey = this.openKey;
 
         return (
             <div className='left-nav'>
@@ -109,15 +123,17 @@ const { SubMenu } = Menu;
                     <h1>测试管理系统</h1>
                 </Link>
                 <Menu
+                    // 根据路由选中导航菜单项
                     selectedKeys={[path]}
-                    defaultOpenKeys={['sub1']}
+                    // 设置展开的菜单项
+                    defaultOpenKeys={[openKey]}
                     mode="inline"
                     theme="dark"
                     // inlineCollapsed={this.state.collapsed}
                 >
                     {
                         // 根据数据动态生成导航栏的菜单项
-                        this.getMenuNodes_map(menuList)
+                        this.menuNodes
                     }
                 </Menu>
             </div>
