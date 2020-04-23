@@ -17,7 +17,7 @@ import storageUtil from '../../utils/storageUtil';
 const NormalLoginForm = (props) => {
 
   const onFinish = async (values) => {
-    console.log('Received values of form: ', values);
+
     // 解构赋值
     const { username, password } = values;
     const response = await reqLogin(username, password);
@@ -30,7 +30,6 @@ const NormalLoginForm = (props) => {
         memoryUtil.user = user;
         memoryUtil.token = token;
 
-        console.log(user);
         // 保存到本地存储
         storageUtil.saveUser(user);
         storageUtil.saveToken(token);

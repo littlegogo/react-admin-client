@@ -1,6 +1,6 @@
 // 管理的路由组件
 import React, { Component } from 'react';
-import { Redirect, BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Layout } from 'antd';
 import memoryUtil from '../../utils/memoryUtil';
 import LeftNav from '../../components/left-vav';
@@ -32,7 +32,7 @@ export default class Admin extends Component {
         }
 
         // 获取用户的token
-        const token = memoryUtil.token;
+        // const token = memoryUtil.token;
 
         return (
                 <Layout style={{height:'100%'}}>
@@ -41,7 +41,7 @@ export default class Admin extends Component {
                 </Sider>
                 <Layout>
                 <Header>Header</Header>
-                <Content style={{backgroundColor:'#fff'}}>
+                <Content style={{ margin: 20, backgroundColor:'#fff'}}>
                     <Switch>
                         <Route path='/home' component={Home}></Route>
                         <Route path='/category' component={Category}></Route>

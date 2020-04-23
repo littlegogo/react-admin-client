@@ -5,18 +5,10 @@ import { Link, withRouter } from 'react-router-dom';
 import menuList from '../../config/menuConfig';
 import './index.less';
 import logo from '../../assets/image/logo.png';
-import { Menu, Icon } from 'antd';
+import { Menu } from 'antd';
 import {
-    BarChartOutlined,
     MenuUnfoldOutlined,
-    UnorderedListOutlined,
-    LockOutlined,
-    UserOutlined,
-    AreaChartOutlined,
-    HomeOutlined,
     MailOutlined,
-    LineChartOutlined,
-    PieChartOutlined
 } from '@ant-design/icons';
 
 const { SubMenu } = Menu;
