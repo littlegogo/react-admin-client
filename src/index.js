@@ -15,8 +15,6 @@ const loadStorage = () => {
 
     memoryUtil.user = user;
     memoryUtil.token = token;
-
-    console.log(memoryUtil);
 }
 
 loadStorage();

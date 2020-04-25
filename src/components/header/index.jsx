@@ -1,10 +1,14 @@
 // 头部组件
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Modal } from 'antd';
+import {ExclamationCircleOutlined} from '@ant-design/icons';
+import LinkButton from '../link-button';
 import './index.less';
 import { reqWeather } from '../../api';
 import { formatDate } from '../../utils/dateUtil';
 import memoryUtil from '../../utils/memoryUtil';
+import storageUtil from '../../utils/storageUtil';
 import menuList from '../../config/menuConfig';
 
 class Header extends Component{
@@ -16,7 +20,7 @@ class Header extends Component{
     }
 
     getTime = ()=>{
-        setInterval(() => {
+        this.intervalid = setInterval(() => {
             const currentTime = formatDate(Date.now());
             this.setState({currentTime});
         }, 1000);
@@ -44,6 +48,23 @@ class Header extends Component{
 
         return title;        
     }
+
+    // 退出登录
+    logout = ()=>{
+        Modal.confirm({
+            title: '提示',
+            icon: <ExclamationCircleOutlined />,
+            content: '确认退出吗？',
+            onOk: () => {
+                storageUtil.removeUser();
+                memoryUtil.user = {};
+                this.props.history.replace('/login');
+            },
+            onCancel: () => {
+                
+            },
+          });
+    }
     // 第一次render之后执行，只执行一次
     // 一般在此处执行异步操作，发送ajax/启动定时器
     componentDidMount(){
@@ -51,6 +72,12 @@ class Header extends Component{
         this.getTime();
         // 获取当前天气显示
         this.getWeather();
+    }
+
+    // 当前组件卸载之前
+    componentWillUnmount() {
+        //清除定时器
+        clearInterval(this.intervalid);
     }
 
     render() {
@@ -62,7 +89,8 @@ class Header extends Component{
             <div className='header'>
                 <div className="header-top">
                 <span>欢迎 【{username}】</span>
-                    <a href="http://123.com">退出</a>
+                    {/* <a href="javascript:" onClick={this.logout}>退出</a> */}
+                    <LinkButton onClick={this.logout} >退出</LinkButton>
                 </div>
                 <div className="header-bottom">
                     <div className="header-bottom-left">

@@ -11,9 +11,15 @@ import {
     MailOutlined,
 } from '@ant-design/icons';
 
+
 const { SubMenu } = Menu;
 
  class LeftNav extends Component {
+
+    constructor(props) {
+        super(props);
+        this.menuNodes = this.getMenuNodes_map(menuList);
+    }
 
     // 根据数据生成菜单节点
    getMenuNodes_map = (menuList) => {
@@ -90,12 +96,6 @@ const { SubMenu } = Menu;
             }
             return pre;
         },[]);
-    }
-
-    // 在第一次render()之前执行一次
-    // 为第一个render准备数据（同步的）
-    componentWillMount() {
-        this.menuNodes = this.getMenuNodes_map(menuList);
     }
 
     render() {
