@@ -3,39 +3,25 @@ import React, { Component } from 'react';
 import {
     Card,
     Table,
-    Button
+    Pagination,
+    Button,
+    message
 } from 'antd';
 
 import { PlusCircleOutlined } from '@ant-design/icons';
 import LinkButton from '../../components/link-button';
+import { reqCategories, reqAddCategory, reqUpdateCategory } from '../../api';
 
 export default class Category extends Component {
 
-    
-    render() {
+    state = {
+        categories: [],
+        loading: false
+    }
 
-        const dataSource = [
-            {
-                "parentId": null,
-                "_id": "5ea42848c377cd44e04e64dc",
-                "name": "家用电器",
-                "__v": 0
-            },
-            {
-                "parentId": null,
-                "_id": "5ea429907f827c06f8a976fe",
-                "name": "电脑",
-                "__v": 0
-            },
-            {
-                "parentId": null,
-                "_id": "5ea429997f827c06f8a976ff",
-                "name": "图书",
-                "__v": 0
-            }
-          ];
-          
-          const columns = [
+    // 初始化表格列
+    initColumns = ()=> {
+        this.columns = [
             {
               title: '分类名称',
               dataIndex: 'name',
@@ -51,6 +37,40 @@ export default class Category extends Component {
                 </span>)
             },
           ];
+    }
+
+    // 获取一级分类列表
+    getCategories = async ()=>{
+
+        // 在发请求前显示loading
+        this.setState({ loading: true });
+        // 发送请求
+        const response = await reqCategories();
+        const result = response.data;
+        if(result.status === 'success'){
+            const { categories } = result;
+            this.setState({ categories });
+        } else {
+            message.error(result.message);
+        }
+
+        // 结束loading
+        this.setState({ loading: false });
+        
+    }
+
+    // 发起异步请求，请求一级分类
+    componentDidMount() {
+        this.initColumns();
+        this.getCategories();
+    }
+
+    onChange(){
+
+    }
+    render() {
+
+        const { categories, loading } = this.state;
 
         //卡片标题
         const title = '一级分类列表';
@@ -61,13 +81,22 @@ export default class Category extends Component {
                 添加
             </Button>
         );
+
         return(
             <Card title={title} extra={extra}>
                 <Table
                     bordered
+                    loading={loading}
                     rowKey='_id'
-                    dataSource={dataSource}
-                    columns={columns}
+                    dataSource={categories}
+                    columns={this.columns}
+                    pagination= {{
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        defaultPageSize: 2,
+                        defaultCurrent: 1,
+                        showTotal: num => `共有${num}项`,
+                    }}
                 />
             </Card>
         );

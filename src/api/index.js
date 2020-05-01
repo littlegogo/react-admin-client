@@ -11,6 +11,12 @@ const BASE_API="/api"; //'http://localhost:5000';
 export const reqLogin = (username, password) =>  ajax(BASE_API + '/login', {username, password}, 'POST');
 // 添加用户
 export const reqAddUser = (user) =>  ajax(BASE_API + '/register', user, 'POST');
+// 请求产品分类列表
+export const reqCategories = (parentId=null) =>  ajax(BASE_API + '/categories', { parentId }, 'GET');
+// 添加分类
+export const reqAddCategory = (categoryName, parentId) =>  ajax(BASE_API + '/categories', { categoryName, parentId }, 'POST');
+// 更新分类
+export const reqUpdateCategory = ({categoryName, parentId}) =>  ajax(BASE_API + '/categories', { categoryName, parentId }, 'PUT');
 
 //jsonp 请求的接口请求函数
 export const reqWeather = (city) => {
