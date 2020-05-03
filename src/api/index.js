@@ -14,10 +14,11 @@ export const reqAddUser = (user) =>  ajax(BASE_API + '/register', user, 'POST');
 // 请求产品分类列表
 export const reqCategories = (parentId=null) =>  ajax(BASE_API + '/categories', { parentId }, 'GET');
 // 添加分类
-export const reqAddCategory = (categoryName, parentId) =>  ajax(BASE_API + '/categories', { categoryName, parentId }, 'POST');
+export const reqAddCategory = (parentId, name) =>  ajax(BASE_API + '/categories', { parentId, name }, 'POST');
 // 更新分类
 export const reqUpdateCategory = (id, parentId, name) =>  ajax(BASE_API + '/categories/'+id , { parentId, name }, 'PUT');
-
+// 删除分类
+export const reqDeleteCategory = (id) =>  ajax(BASE_API + '/categories/'+id , { }, 'DELETE');
 //jsonp 请求的接口请求函数
 export const reqWeather = (city) => {
 

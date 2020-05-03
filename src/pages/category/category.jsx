@@ -12,7 +12,7 @@ import UpdateForm from './update-form';
 
 import { PlusCircleOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import LinkButton from '../../components/link-button';
-import { reqCategories, reqAddCategory, reqUpdateCategory } from '../../api';
+import { reqCategories, reqAddCategory, reqUpdateCategory, reqDeleteCategory } from '../../api';
 
 export default class Category extends Component {
 
@@ -35,25 +35,29 @@ export default class Category extends Component {
             },
             {
                 title: '操作',
-                width: '150px',
+                width: '200px',
                 render: (category) => (//返回需要显示的界面标签
                     <span>
-                        <LinkButton onClick={()=> this.showUpdate(category) }>修改</LinkButton>
+                        
                         {/* 如何向事件回调函数传递参数，先定义一个匿名函数，再函数中调用处理的函数，并传入数据 */}
                         {this.state.parentId === null ? <LinkButton onClick={() => { this.showSubCategories(category) }}>子分类</LinkButton> : null}
+                        <LinkButton onClick={()=> this.showUpdate(category) }>修改</LinkButton>
+                        <LinkButton onClick={()=> this.deleteCategory(category) }>删除</LinkButton>
 
                     </span>)
             },
         ];
     }
 
-    // 获取一级分类列表
-    getCategories = async () => {
+    // 获取一级/二级分类列表显示
+    // parentId: 如果没有指定根据状态中的parentId请求，如果指定了根据指定的请求
+    // 
+    getCategories = async (reqParent) => {
 
         // 在发请求前显示loading
         this.setState({ loading: true });
         // 发送请求
-        const { parentId } = this.state;
+        const parentId  = reqParent===true ? null: this.state.parentId;
         const response = await reqCategories(parentId);
         const result = response.data;
         if (result.status === 'success') {
@@ -102,9 +106,6 @@ export default class Category extends Component {
 
     // 响应点击对话框的取消按钮
     handleCancel = () => {
-
-        // 清空表单
-        this.form.resetFields();
         // 隐藏对话框
         this.setState({
             showDialogs: 0
@@ -115,12 +116,38 @@ export default class Category extends Component {
     showAdd = () => {
         this.setState({
             showDialogs: 1
+        },() => {
+
+            console.log(this.state.parentId, this.state.categories)
+            this.form && this.form.setFieldsValue({
+                parentId: this.state.parentId,
+                name:''
+            });
         });
     }
 
     // 添加分类
-    addCategory = () => {
-        console.log('add category');
+    addCategory = async () => {
+       
+        // 隐藏确认框
+        this.setState({
+            showDialogs: 0
+        });
+
+        // 收集数据，提交添加分类请求
+        const { parentId, name } = this.form.getFieldsValue();
+        const response = await reqAddCategory(parentId, name);
+        // 重新获取分类列表显示
+        if(response.data.status === 'success') {
+            if(parentId === this.state.parentId){
+                // 重新获取当前分类列表显示
+                this.getCategories();
+            } else if (parentId === null){
+                // 在二级分类列表下添加一级分类，重新获取一级分类列表，但不需要显示一级列表
+                this.getCategories(true);
+            }
+        }
+
         
     }
 
@@ -132,6 +159,10 @@ export default class Category extends Component {
         // 更新状态
         this.setState({
             showDialogs: 2
+        },()=>{
+           this.form && this.form.setFieldsValue({
+               categoryName: this.category.name
+           });
         });
     }
 
@@ -147,16 +178,23 @@ export default class Category extends Component {
         const id = this.category._id;
         const name = this.form.getFieldValue('categoryName');
         const result = await reqUpdateCategory(id,  parentId, name);
-
         if(result.data.status === 'success') {
             // 重新显示新的分类列表
             this.getCategories();
         }
-
-        this.form.resetFields();
     }
 
     // 删除分类
+    deleteCategory = async (category) => {
+        let name = category.name;
+        const response = await reqDeleteCategory(category._id);
+        if (response.data.status === 'success') {
+            this.getCategories();
+            message.success(name + '删除成功');
+        } else {
+            message.error(name + '删除失败');
+        }
+    }
 
 
     // 发起异步请求，请求一级分类
@@ -201,7 +239,7 @@ export default class Category extends Component {
                     pagination={{
                         showSizeChanger: true,
                         showQuickJumper: true,
-                        defaultPageSize: 5,
+                        defaultPageSize: 10,
                         defaultCurrent: 1,
                         showTotal: num => `共有${num}项`,
                     }}
@@ -212,7 +250,7 @@ export default class Category extends Component {
                     onOk={ this.addCategory }
                     onCancel={ this.handleCancel }
                 >
-                    <AddForm></AddForm>
+                    <AddForm categories={ categories } parentId={ parentId } setForm={(form) => { this.form = form}}/>
                 </Modal>
 
                 <Modal
