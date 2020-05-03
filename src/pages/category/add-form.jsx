@@ -38,7 +38,13 @@ export default class AddForm extends Component {
                             }
                         </Select>
                     </Item>
-                    <Item name='name'>
+                    <Item
+                        name='name'
+                        rules={[{ 
+                            required: true,
+                            message: '分类名称必须输入!'
+                        }]}
+                    >
                         <Input placeholder='请输入分类名称'></Input>
                     </Item>
 

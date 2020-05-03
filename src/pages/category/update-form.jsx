@@ -27,7 +27,13 @@ export default class UpdateForm extends Component {
         return (
             <div>
                 <Form  initialValues={{categoryName}} ref={ this.formRef }>
-                    <Item  name='categoryName'>
+                    <Item  
+                        name='categoryName'
+                        rules={[{ 
+                            required: true,
+                            message: '分类名称必须输入!'
+                        }]}
+                    >
                         <Input placeholder='请输入分类名称'></Input>
                     </Item>
                 </Form>
