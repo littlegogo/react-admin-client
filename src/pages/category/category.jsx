@@ -16,9 +16,6 @@ import { reqCategories, reqAddCategory, reqUpdateCategory } from '../../api';
 
 export default class Category extends Component {
 
-    updateFormRef = React.createRef();
-    
-
     state = {
         categories: [],  // 一级分类列表
         subCategories: [], // 二级分类列表
@@ -142,7 +139,9 @@ export default class Category extends Component {
 
         // 发请求，保存更新分类
         const categoryId = this.category._id;
-        const categoryName = this.updateFormRef.current.getFieldsValue();
+        const categoryName = this.form.getFieldValue('categoryName');
+        console.log(categoryName);
+
         const result = await reqUpdateCategory({
             categoryId,
             categoryName
@@ -221,7 +220,9 @@ export default class Category extends Component {
                     onOk={ this.updateCategory }
                     onCancel={ this.handleCancel }
                 >                    
-                    <UpdateForm categoryName={ category.name } ref={this.updateFormRef}/>
+                    <UpdateForm 
+                        categoryName={ category.name }
+                        setForm={(form)=>{this.form = form}}/>
                 </Modal>
             </Card>
         );

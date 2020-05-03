@@ -14,13 +14,14 @@ export default class UpdateForm extends Component {
     formRef = React.createRef();
     
     static propTpyes = {
-        categoryName: PropTypes.string.isRequired
+        categoryName: PropTypes.string.isRequired,
+        setForm: PropTypes.func.isRequired
     }
 
-    getFieldsValue = () => {
-        return this.formRef.current.getFieldsValue();
+    componentDidMount(){
+        this.props.setForm(this.formRef.current);
     }
-
+  
     render() {
         const { categoryName } = this.props;
         return (
