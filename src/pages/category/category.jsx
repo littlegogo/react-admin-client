@@ -102,12 +102,12 @@ export default class Category extends Component {
 
     // 响应点击对话框的取消按钮
     handleCancel = () => {
+
+        // 清空表单
+        this.form.resetFields();
+        // 隐藏对话框
         this.setState({
             showDialogs: 0
-        });
-
-        this.form.setFieldsValue({
-            categoryName:''
         });
     }
 
@@ -132,12 +132,6 @@ export default class Category extends Component {
         // 更新状态
         this.setState({
             showDialogs: 2
-        }, () => {
-            if(this.form){
-                this.form.setFieldsValue({
-                    categoryName: this.category.name
-                });
-            }
         });
     }
 
@@ -158,6 +152,8 @@ export default class Category extends Component {
             // 重新显示新的分类列表
             this.getCategories();
         }
+
+        this.form.resetFields();
     }
 
     // 删除分类
