@@ -16,7 +16,7 @@ export const reqCategories = (parentId=null) =>  ajax(BASE_API + '/categories', 
 // 添加分类
 export const reqAddCategory = (categoryName, parentId) =>  ajax(BASE_API + '/categories', { categoryName, parentId }, 'POST');
 // 更新分类
-export const reqUpdateCategory = ({categoryName, parentId}) =>  ajax(BASE_API + '/categories', { categoryName, parentId }, 'PUT');
+export const reqUpdateCategory = ({ parentId, id, name }) =>  ajax(BASE_API + '/categories', { parentId, id, name }, 'PUT');
 
 //jsonp 请求的接口请求函数
 export const reqWeather = (city) => {

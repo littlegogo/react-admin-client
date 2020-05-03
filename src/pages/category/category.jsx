@@ -138,14 +138,16 @@ export default class Category extends Component {
         });
 
         // 发请求，保存更新分类
-        const categoryId = this.category._id;
-        const categoryName = this.form.getFieldValue('categoryName');
-        console.log(categoryName);
+        const parentId = this.category.parentId;
+        const id = this.category._id;
+        const name = this.form.getFieldValue('categoryName');
+        console.log(name);
 
         const result = await reqUpdateCategory({
-            categoryId,
-            categoryName
-        });
+            parentId,
+            id,
+            name
+        }, 'PUT');
 
         if(result.status === 'success') {
             // 重新显示新的分类列表
