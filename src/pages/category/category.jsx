@@ -105,6 +105,10 @@ export default class Category extends Component {
         this.setState({
             showDialogs: 0
         });
+
+        this.form.setFieldsValue({
+            categoryName:''
+        });
     }
 
     // 显示添加的确认框
@@ -124,9 +128,16 @@ export default class Category extends Component {
     showUpdate = (category) => {
         // 保存分类对象
         this.category = category;
+
         // 更新状态
         this.setState({
             showDialogs: 2
+        }, () => {
+            if(this.form){
+                this.form.setFieldsValue({
+                    categoryName: this.category.name
+                });
+            }
         });
     }
 
@@ -141,19 +152,12 @@ export default class Category extends Component {
         const parentId = this.category.parentId;
         const id = this.category._id;
         const name = this.form.getFieldValue('categoryName');
-        console.log(name);
+        const result = await reqUpdateCategory(id,  parentId, name);
 
-        const result = await reqUpdateCategory({
-            parentId,
-            id,
-            name
-        }, 'PUT');
-
-        if(result.status === 'success') {
+        if(result.data.status === 'success') {
             // 重新显示新的分类列表
             this.getCategories();
         }
-
     }
 
     // 删除分类
@@ -173,8 +177,7 @@ export default class Category extends Component {
         const { categories, subCategories, parentId, parentName, loading, showDialogs } = this.state;
 
         // 读取指定的分类
-        const category = this.category || {};
-    
+        const category = this.category || {};    
         //卡片标题
         const title = parentId === null ? '一级分类列表' : (
             <span>

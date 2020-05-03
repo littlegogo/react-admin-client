@@ -26,7 +26,7 @@ export default class UpdateForm extends Component {
         const { categoryName } = this.props;
         return (
             <div>
-                <Form initialValues={{categoryName}}  ref={ this.formRef }>
+                <Form   initialValues={{categoryName}} ref={ this.formRef }>
                     <Item  name='categoryName'>
                         <Input placeholder='请输入分类名称'></Input>
                     </Item>
