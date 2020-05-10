@@ -21,9 +21,16 @@ export const reqUpdateCategory = (id, parentId, name) =>  ajax(BASE_API + '/cate
 // 删除分类
 export const reqDeleteCategory = (id) =>  ajax(BASE_API + '/categories/'+id , { }, 'DELETE');
 
-// 请求商品列表
+// 请求商品分页列表
 export const reqProducts = (pageNumber, pageSize) =>  ajax(BASE_API + '/products/' , { pageNumber, pageSize}, 'GET');
 
+// 搜索商品分页列表（根据商品名称/商品描述）
+// searchType：搜索的类型，name/desc
+export const reqSearchProducts = ({pageNumber, pageSize, searchName, searchType }) =>  ajax(BASE_API + '/products/' , {
+    pageNumber,
+    pageSize,
+    [searchType]:searchName // 使用searchType的值作为属性
+}, 'GET');
 
 //jsonp 请求的接口请求函数
 export const reqWeather = (city) => {
