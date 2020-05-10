@@ -25,36 +25,8 @@ export default class ProductHome extends Component {
 
     state = {
         total: 0, // 商品总数量
-        products:[
-            // {
-            //     status: 0,
-            //     imgs: [
-            //         "image-1.jpg",
-            //         "image-2.jpg",
-            //     ],
-            //     _id:'abcdefghigklmn',
-            //     name: '联想电脑',
-            //     desc: 'ssss',
-            //     price: 1111,
-            //     pCategory: 'xxxxx',
-            //     categoryid: 'xxxx',
-            //     detail: 'xxxxxxxxxxxxxxxxxxxx'
-            // },
-            // {
-            //     status: 1,
-            //     imgs: [
-            //         "image-1.jpg",
-            //         "image-2.jpg",
-            //     ],
-            //     _id:'abcdefghigklmnfdsgsdfg',
-            //     name: '联想电脑',
-            //     desc: 'ssss',
-            //     price: 1111,
-            //     pCategory: 'xxxxx',
-            //     categoryid: 'xxxx',
-            //     detail: 'xxxxxxxxxxxxxxxxxxxx'
-            // }
-        ]
+        products:[], // 商品列表
+        loading: false
     }
 
     // 初始化table列
@@ -101,6 +73,9 @@ export default class ProductHome extends Component {
     // 获取指定页码的列表数据显示
     getProducts = async (pageNumber, pagesize) => {
         console.log(pageNumber, pagesize);
+        this.setState({
+            loading: true
+        });
         const result = await reqProducts(pageNumber, PRODUCT_PAGE_SIZE);
         console.log(result)
         if(result.data.status === 'success') {
@@ -109,6 +84,10 @@ export default class ProductHome extends Component {
             this.setState({
                 total,
                 products
+            });
+
+            this.setState({
+                loading: false
             });
         } else {
             message.error('请求商品列表失败');
@@ -120,7 +99,7 @@ export default class ProductHome extends Component {
     }
 
     render() {
-        const { products, total } = this.state;
+        const { products, total, loading } = this.state;
         const title = (
             <span>
                 <Select value='1' style={{ width: 150 }}>
@@ -149,8 +128,8 @@ export default class ProductHome extends Component {
                     dataSource={products}
                     columns={this.columns}
                     bordered
-                    pagination={{
-                        
+                    pagination={{   
+                        loading: loading,                     
                         showSizeChanger: true,
                         showQuickJumper: true,
                         total: total,
