@@ -11,6 +11,7 @@ const BASE_API="/api"; //'http://localhost:5000';
 export const reqLogin = (username, password) =>  ajax(BASE_API + '/login', {username, password}, 'POST');
 // 添加用户
 export const reqAddUser = (user) =>  ajax(BASE_API + '/register', user, 'POST');
+
 // 请求产品分类列表
 export const reqCategories = (parentId=null) =>  ajax(BASE_API + '/categories', { parentId }, 'GET');
 // 添加分类
@@ -19,6 +20,11 @@ export const reqAddCategory = (parentId, name) =>  ajax(BASE_API + '/categories'
 export const reqUpdateCategory = (id, parentId, name) =>  ajax(BASE_API + '/categories/'+id , { parentId, name }, 'PUT');
 // 删除分类
 export const reqDeleteCategory = (id) =>  ajax(BASE_API + '/categories/'+id , { }, 'DELETE');
+
+// 请求商品列表
+export const reqProducts = (pageNumber, pageSize) =>  ajax(BASE_API + '/products/' , { pageNumber, pageSize}, 'GET');
+
+
 //jsonp 请求的接口请求函数
 export const reqWeather = (city) => {
 

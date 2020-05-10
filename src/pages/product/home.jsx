@@ -6,6 +6,7 @@ import {
     Input,
     Button,
     Table,
+    message,
 } from 'antd';
 
 import {
@@ -13,40 +14,46 @@ import {
 } from '@ant-design/icons';
 
 import LinkButton from '../../components/link-button';
+
+import {reqProducts} from '../../api';
+import {PRODUCT_PAGE_SIZE} from '../../utils/constants';
+
+
 const Option = Select.Option;
 
 export default class ProductHome extends Component {
 
     state = {
+        total: 0, // 商品总数量
         products:[
-            {
-                status: 0,
-                imgs: [
-                    "image-1.jpg",
-                    "image-2.jpg",
-                ],
-                _id:'abcdefghigklmn',
-                name: '联想电脑',
-                desc: 'ssss',
-                price: 1111,
-                pCategory: 'xxxxx',
-                categoryid: 'xxxx',
-                detail: 'xxxxxxxxxxxxxxxxxxxx'
-            },
-            {
-                status: 1,
-                imgs: [
-                    "image-1.jpg",
-                    "image-2.jpg",
-                ],
-                _id:'abcdefghigklmnfdsgsdfg',
-                name: '联想电脑',
-                desc: 'ssss',
-                price: 1111,
-                pCategory: 'xxxxx',
-                categoryid: 'xxxx',
-                detail: 'xxxxxxxxxxxxxxxxxxxx'
-            }
+            // {
+            //     status: 0,
+            //     imgs: [
+            //         "image-1.jpg",
+            //         "image-2.jpg",
+            //     ],
+            //     _id:'abcdefghigklmn',
+            //     name: '联想电脑',
+            //     desc: 'ssss',
+            //     price: 1111,
+            //     pCategory: 'xxxxx',
+            //     categoryid: 'xxxx',
+            //     detail: 'xxxxxxxxxxxxxxxxxxxx'
+            // },
+            // {
+            //     status: 1,
+            //     imgs: [
+            //         "image-1.jpg",
+            //         "image-2.jpg",
+            //     ],
+            //     _id:'abcdefghigklmnfdsgsdfg',
+            //     name: '联想电脑',
+            //     desc: 'ssss',
+            //     price: 1111,
+            //     pCategory: 'xxxxx',
+            //     categoryid: 'xxxx',
+            //     detail: 'xxxxxxxxxxxxxxxxxxxx'
+            // }
         ]
     }
 
@@ -90,12 +97,30 @@ export default class ProductHome extends Component {
             },
           ];
     }
+
+    // 获取指定页码的列表数据显示
+    getProducts = async (pageNumber, pagesize) => {
+        console.log(pageNumber, pagesize);
+        const result = await reqProducts(pageNumber, PRODUCT_PAGE_SIZE);
+        console.log(result)
+        if(result.data.status === 'success') {
+            console.log(result.data)
+            const { total, products } = result.data;
+            this.setState({
+                total,
+                products
+            });
+        } else {
+            message.error('请求商品列表失败');
+        }
+    }
     componentDidMount(){
         this.initColumns();
+        this.getProducts(1);
     }
 
     render() {
-        const { products } = this.state;
+        const { products, total } = this.state;
         const title = (
             <span>
                 <Select value='1' style={{ width: 150 }}>
@@ -124,6 +149,16 @@ export default class ProductHome extends Component {
                     dataSource={products}
                     columns={this.columns}
                     bordered
+                    pagination={{
+                        
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        total: total,
+                        defaultPageSize: PRODUCT_PAGE_SIZE,
+                        defaultCurrent: 1,
+                        showTotal: num => `共有${num}项`,
+                        onChange: this.getProducts
+                    }}
                 />
             </Card>
         );
