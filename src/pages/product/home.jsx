@@ -15,7 +15,7 @@ import {
 
 import LinkButton from '../../components/link-button';
 
-import {reqProducts, reqSearchProducts } from '../../api';
+import {reqProducts, reqSearchProducts, reqUpdateStatus } from '../../api';
 import {PRODUCT_PAGE_SIZE} from '../../utils/constants';
 
 
@@ -50,12 +50,18 @@ export default class ProductHome extends Component {
             {
                 title: '状态',
                 width: '100px',
-                dataIndex: 'status',
-                render:(status) => {
+                //dataIndex: 'status',
+                render:(product) => {
+                    const {status, _id, name }= product;
                     return (
                         <span>
-                            <Button type='primary'>下架</Button>
-                            <span>在售</span>
+                            <Button 
+                                type='primary'
+                                onClick={()=>{this.updateStatus(_id, name, status ===1 ? 0 : 1)}}
+                            >
+                                {status===1? '下架':'上架'}
+                            </Button>
+                            <span>{status===1? '在售':'已下架'}</span>
                         </span>
                     );
                 }
@@ -65,7 +71,8 @@ export default class ProductHome extends Component {
                 width: '100px',
                 render: (product) => (//返回需要显示的界面标签
                     <span>
-                        <LinkButton >详情</LinkButton>
+                        {/* 讲product作为state对象传递给目的路由组件 */}
+                        <LinkButton onClick={()=>{this.props.history.push('/product/detail', {product})}}>详情</LinkButton>
                         <LinkButton >修改</LinkButton>
                     </span>)
             },
@@ -74,7 +81,9 @@ export default class ProductHome extends Component {
 
     // 获取指定页码的列表数据显示
     getProducts = async (pageNumber, pagesize) => {
-        console.log(pageNumber, pagesize);
+        // 保存当前的页码，让其它方法可以看到
+        this.pageNumber = pageNumber;
+
         this.setState({
             loading: true
         });
@@ -93,9 +102,7 @@ export default class ProductHome extends Component {
             result = await reqProducts(pageNumber, PRODUCT_PAGE_SIZE);
         }
        
-        console.log(result)
         if(result.data.status === 'success') {
-            console.log(result.data)
             // 取出分页数据，更新状态，显示分页列表
             const { total, products } = result.data;
             this.setState({
@@ -110,6 +117,19 @@ export default class ProductHome extends Component {
             message.error('请求商品列表失败');
         }
     }
+
+    // 更新指定商品的状态
+    updateStatus = async (id, productName, status)=>{
+        const result = await reqUpdateStatus(id, status);
+        if(result.data.status === 'success') {
+            message.success(`更新${productName}状态成功`);
+            this.getProducts(this.pageNumber, PRODUCT_PAGE_SIZE);
+        } else {
+            message.error(`更新${productName}状态失败`);
+        }
+    }
+
+
     componentDidMount(){
         this.initColumns();
         this.getProducts(1, PRODUCT_PAGE_SIZE);

@@ -4,6 +4,7 @@ import {Switch, Route, Redirect} from 'react-router-dom';
 import ProductHome from './home';
 import ProductAddUpdate from './add-update';
 import ProductDetail from './detail';
+import './product.less'; // 引入样式，子组件可见
 
 export default class Product extends Component {
 

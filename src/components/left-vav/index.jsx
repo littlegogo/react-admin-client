@@ -39,7 +39,7 @@ const { SubMenu } = Menu;
                );
            } else {
 
-               const citem = item.child.find(citem => citem.key === path);
+               const citem = item.child.find(citem => path.indexOf(citem.key) === 0);
                if(citem){
                    this.openKey = item.key;
                }
@@ -101,7 +101,10 @@ const { SubMenu } = Menu;
     render() {
 
         //得到当前请求的路由路径
-        const path = this.props.location.pathname;
+        let path = this.props.location.pathname;
+        if(path.indexOf('/product')===0){
+            path = '/product'
+        }
         // 得到当前需要打开菜单项的key
         const openKey = this.openKey;
 

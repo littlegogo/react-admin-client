@@ -12,6 +12,9 @@ export const reqLogin = (username, password) =>  ajax(BASE_API + '/login', {user
 // 添加用户
 export const reqAddUser = (user) =>  ajax(BASE_API + '/register', user, 'POST');
 
+
+// 请求特定分类
+export const reqCategory = (id) =>  ajax(BASE_API + '/categories/'+ id, {}, 'GET');
 // 请求产品分类列表
 export const reqCategories = (parentId=null) =>  ajax(BASE_API + '/categories', { parentId }, 'GET');
 // 添加分类
@@ -23,6 +26,9 @@ export const reqDeleteCategory = (id) =>  ajax(BASE_API + '/categories/'+id , { 
 
 // 请求商品分页列表
 export const reqProducts = (pageNumber, pageSize) =>  ajax(BASE_API + '/products/' , { pageNumber, pageSize}, 'GET');
+
+// 请求更新产品状态
+export const reqUpdateStatus = (id, status) =>  ajax(BASE_API + '/products/updateStatus' , { id, status}, 'PUT');
 
 // 搜索商品分页列表（根据商品名称/商品描述）
 // searchType：搜索的类型，name/desc
